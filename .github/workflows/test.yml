@@ -1,0 +1,55 @@
+name: Check flaky test
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'TileDB-SOMA branch or tag to check'
+        required: true
+        default: 'main'
+      python-version:
+        description: 'Python version'
+        required: true
+        default: '3.11'
+      runs-on:
+        description: 'Runs on'
+        type: 'choice'
+        options:
+          - 'ubuntu-latest'
+          - 'macos-latest'
+        required: true
+        default: 'ubuntu-latest'
+      n:
+        description: 'Number of times to run the test'
+        required: true
+        default: 40
+        type: 'number'
+env:
+  test: apis/python/tests/test_dataframe.py::test_write_categorical_types
+jobs:
+  test:
+    name: Check flaky tiledb-soma test
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'single-cell-data/TileDB-SOMA'
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+          cache: 'pip'
+      - name: Synthesize RELEASE-VERSION file
+        run: echo "1.7.3rc0" > apis/python/RELEASE-VERSION
+      - run: make install
+      - name: Install dev deps
+        run: pip install -r apis/python/requirements_dev.txt  # required for pytest (only in some commits, back in time?)
+      - name: Run test once (as a sanity check, including output)
+        run: |
+          echo "Running: $test"
+          pytest $test
+      - name: Run test ${{ inputs.n }} times
+        run: |
+          for i in $(seq ${{ inputs.n }}); do
+              pytest $test &>/dev/null && printf - || printf F
+          done
+          echo
