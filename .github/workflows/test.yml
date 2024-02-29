@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: 'single-cell-data/TileDB-SOMA'
+          repository: 'ryan-williams/TileDB-SOMA'
           ref: ${{ inputs.ref }}
       - uses: actions/setup-python@v5
         with:
