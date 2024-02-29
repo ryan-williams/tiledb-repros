@@ -12,15 +12,15 @@ from pyarrow import ArrowIndexError
 
 
 @click.command
-@click.option('-s', '--string-ordered', is_flag=True)
-@click.option('-S', '--string-unordered', is_flag=True)
-@click.option('-i', '--int-ordered', is_flag=True)
-@click.option('-I', '--int-unordered', is_flag=True)
-@click.option('-b', '--bool-ordered', is_flag=True)
-@click.option('-B', '--bool-unordered', is_flag=True)
-@click.option('-n', '--num', type=int, default=100)
-@click.option('-X', '--no-short-circuit', is_flag=True)
-@click.option('-c', '--compat-cols', is_flag=True)
+@click.option('-s', '--string-ordered', is_flag=True, help="Include an ordered string column in the pa.schema and pd.DataFrame")
+@click.option('-S', '--string-unordered', is_flag=True, help="Include an unordered string column in the pa.schema and pd.DataFrame")
+@click.option('-i', '--int-ordered', is_flag=True, help="Include an ordered int column in the pa.schema and pd.DataFrame")
+@click.option('-I', '--int-unordered', is_flag=True, help="Include an unordered int column in the pa.schema and pd.DataFrame")
+@click.option('-b', '--bool-ordered', is_flag=True, help="Include an ordered bool column in the pa.schema and pd.DataFrame")
+@click.option('-B', '--bool-unordered', is_flag=True, help="Include an unordered bool column in the pa.schema and pd.DataFrame")
+@click.option('-n', '--num', type=int, default=100, help="Number of iterations to run")
+@click.option('-X', '--no-short-circuit', is_flag=True, help="Run all -n/--num iterations, even if failures are encountered (default: short-circuit on first error)")
+@click.option('-c', '--compat-cols', is_flag=True, help='Include "compat" columns (string, int, and bool); these don\'t seem to affect anything')
 def main(
         string_ordered,
         string_unordered,
@@ -32,6 +32,9 @@ def main(
         no_short_circuit,
         compat_cols,
 ):
+    """Test reading and writing of categorical columns in a SOMA DataFrame.
+
+    Iff at least 2 pa.dictionary columns are included, ≈5-10% of runs raise `ArrowIndexError` on ARM Macs."""
     include_fields = {
         "soma_joinid": True,
         "string-ordered": string_ordered,
@@ -98,7 +101,7 @@ def main(
                         stdout.flush()
                     else:
                         stderr.write(f"\nError on attempt {i+1}: {e}\n")
-                        break
+                        raise
     print()
 
 
