@@ -9,7 +9,7 @@ on:
       python-version:
         description: 'Python version'
         required: true
-        default: '3.11'
+        default: '3.11.8'
       runs-on:
         description: 'Runs on'
         type: 'choice'
@@ -43,6 +43,8 @@ jobs:
       - run: make install
       - name: Install dev deps
         run: pip install -r apis/python/requirements_dev.txt  # required for pytest (only in some commits, back in time?)
+      - run: pip freeze
+      - run: pip list
       - name: Run test once (as a sanity check, including output)
         run: |
           echo "Running: $test"
