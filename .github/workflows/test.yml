@@ -16,8 +16,9 @@ on:
         options:
           - 'ubuntu-latest'
           - 'macos-latest'
+          - 'macos-latest-xlarge'
         required: true
-        default: 'ubuntu-latest'
+        default: 'macos-latest'
       n:
         description: 'Number of times to run the test'
         required: true
@@ -30,6 +31,7 @@ jobs:
     name: Check flaky tiledb-soma test
     runs-on: ${{ inputs.runs-on }}
     steps:
+      - run: uname -m
       - uses: actions/checkout@v4
         with:
           repository: 'ryan-williams/TileDB-SOMA'
