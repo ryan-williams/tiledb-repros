@@ -22,7 +22,7 @@ def err(msg = ''):
 @click.option('-I', '--int-unordered', is_flag=True, help="Include an unordered int column in the pa.schema and pd.DataFrame")
 @click.option('-b', '--bool-ordered', is_flag=True, help="Include an ordered bool column in the pa.schema and pd.DataFrame")
 @click.option('-B', '--bool-unordered', is_flag=True, help="Include an unordered bool column in the pa.schema and pd.DataFrame")
-@click.option('-n', '--num', type=int, default=100, help="Number of iterations to run")
+@click.option('-n', '--num', type=int, default=200, help="Number of iterations to run")
 @click.option('-X', '--no-short-circuit', is_flag=True, help="Run all -n/--num iterations, even if failures are encountered (default: short-circuit on first error)")
 @click.option('-c', '--compat-cols', is_flag=True, help='Include "compat" columns (string, int, and bool); these don\'t seem to affect anything')
 def main(
@@ -98,7 +98,8 @@ def main(
 
             with soma.DataFrame.open(tmp_path) as sdf:
                 try:
-                    pa1 = sdf.read().concat()
+                    pa1s = list(sdf.read())
+                    pa1 = pa.concat_tables(iter(pa1s))
                     df1 = pa1.to_pandas()
                     assert (df0 == df1).all().all()
                     stdout.write('-')
@@ -115,9 +116,11 @@ def main(
                     err(f"Current iteration (failing) wrote pyarrow Table ({type(pa0)}):")
                     err(f"{pa0}")
                     err()
-                    err(f"Current iteration (failing) read pyarrow Table ({type(pa1)}):")
-                    err(f"{pa1}")
-                    err()
+                    for pa1t in pa1s:
+                        err(f"Current iteration (failing) pyarrow Table ({type(pa1t)}):")
+                        err(f"{pa1t}")
+                        err()
+
                     if no_short_circuit:
                         stdout.write('F')
                         stdout.flush()
