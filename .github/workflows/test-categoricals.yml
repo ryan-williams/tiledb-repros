@@ -1,0 +1,42 @@
+name: test-categoricals.py
+on:
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: 'Python version'
+        required: true
+        default: '3.11.8'
+      runs-on:
+        description: 'Runs on'
+        type: 'choice'
+        options:
+          - 'ubuntu-latest'
+          - 'macos-latest'
+          - 'macos-latest-xlarge'
+        required: true
+        default: 'macos-latest'
+      n:
+        description: 'Number of times to run the test'
+        required: true
+        default: 200
+        type: 'number'
+      flags:
+        description: 'Flags to pass to test-categoricals (e.g. "-bB", "-sS", "-ibc")'
+        required: true
+        default: '-bB'
+jobs:
+  test:
+    name: Check flaky tiledbsoma test
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - run: uname -m
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+          cache: 'pip'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - run: pip freeze
+      - run: pip list
+      - run: python test-categoricals.py -n ${{ inputs.n }} ${{ inputs.flags }}
