@@ -46,5 +46,5 @@ test-categoricals.py --help
 #   --help                  Show this message and exit.
 ```
 
-[GHA failure]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8102533718/job/22145228998#step:8:12
-[`arm64`]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8102533718/job/22145228998#step:2:5
+[GHA failure]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8102760527/job/22145939851#step:8:41
+[`arm64`]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8102760527/job/22145939851#step:2:5
