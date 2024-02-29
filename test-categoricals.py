@@ -11,6 +11,10 @@ import tiledbsoma as soma
 from pyarrow import ArrowIndexError
 
 
+def err(msg = ''):
+    stderr.write(msg + '\n')
+
+
 @click.command
 @click.option('-s', '--string-ordered', is_flag=True, help="Include an ordered string column in the pa.schema and pd.DataFrame")
 @click.option('-S', '--string-unordered', is_flag=True, help="Include an unordered string column in the pa.schema and pd.DataFrame")
@@ -65,11 +69,13 @@ def main(
             if include_fields[k]
         ]
     )
+    prv_pa0 = None
+    prv_pa1 = None
     for i in range(num):
         with TemporaryDirectory() as tmpdir:
             tmp_path = join(tmpdir, 'sdf')
             with soma.DataFrame.create(tmp_path, schema=schema, index_column_names=["soma_joinid"]) as sdf:
-                df = pd.DataFrame(
+                df0 = pd.DataFrame(
                     data={
                         k: v
                         for k, v in {
@@ -87,21 +93,40 @@ def main(
                         if include_fields[k]
                     }
                 )
-                sdf.write(pa.Table.from_pandas(df))
+                pa0 = pa.Table.from_pandas(df0)
+                sdf.write(pa0)
 
             with soma.DataFrame.open(tmp_path) as sdf:
                 try:
-                    df2 = sdf.read().concat().to_pandas()
-                    assert (df == df2).all().all()
+                    pa1 = sdf.read().concat()
+                    df1 = pa1.to_pandas()
+                    assert (df0 == df1).all().all()
                     stdout.write('-')
                     stdout.flush()
                 except ArrowIndexError as e:
+                    err()
+                    err("*** Caught ArrowIndexError ***")
+                    err(f"Previous iteration: wrote pyarrow Table ({type(prv_pa0)}):")
+                    err(f"{prv_pa0}")
+                    err()
+                    err(f"Previous iteration: read pyarrow Table ({type(prv_pa1)}):")
+                    err(f"{prv_pa1}")
+                    err()
+                    err(f"Current iteration (failing) wrote pyarrow Table ({type(pa0)}):")
+                    err(f"{pa0}")
+                    err()
+                    err(f"Current iteration (failing) read pyarrow Table ({type(pa1)}):")
+                    err(f"{pa1}")
+                    err()
                     if no_short_circuit:
                         stdout.write('F')
                         stdout.flush()
                     else:
                         stderr.write(f"\nError on attempt {i+1}: {e}\n")
                         raise
+
+            prv_pa0 = pa0
+            prv_pa1 = pa1
     print()
 
 
