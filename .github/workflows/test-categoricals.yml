@@ -18,7 +18,7 @@ on:
       n:
         description: 'Number of times to run the test'
         required: true
-        default: 200
+        default: 500
         type: 'number'
       flags:
         description: 'Flags to pass to test-categoricals (e.g. "-bB", "-sS", "-ibc")'

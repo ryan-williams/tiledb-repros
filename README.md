@@ -9,7 +9,7 @@ git clone https://github.com/ryan-williams/tiledbsoma-flaky-test-repro && cd til
 pip install click tiledbsoma
 ```
 
-### Reads fail on [`nok.soma`](./nok.soma) example (any OS)
+### Reads fail on [`nok.soma`] example (any OS)
 ```bash
 ./test-categoricals.py read nok.soma
 # Failed to convert pyarrow Table to_pandas():
@@ -56,7 +56,7 @@ pip install click tiledbsoma
 
 Note the empty `dictionaries:\n[]` in the `bool-unordered` output; the array should be `[true,false]`, as it is when reading a valid SOMA archive:
 
-### Reads succeed on [`ok.soma`](./ok.soma) example (any OS)
+### Reads succeed on [`ok.soma`] example (any OS)
 ```bash
 ./test-categoricals.py read ok.soma
 # Read pyarrow table + called to_pandas():
@@ -78,8 +78,8 @@ Note the empty `dictionaries:\n[]` in the `bool-unordered` output; the array sho
 
 ### Generate an invalid SOMA archive (ARM Macs only)
 ```bash
-# (b)ool (ordered), (B)ool (unordered), 200 reps
-./test-categoricals.py both -bB -n200 out
+# (b)ool (ordered), (B)ool (unordered), 500 reps
+./test-categoricals.py both -bB -n500 out
 ```
 
 You should see a bunch of `Wrote pyarrow Table` / `Read pyarrow Table` blocks, and then a `Failed to convert` block, like in the `nok.soma` example above.
@@ -147,6 +147,25 @@ pyarrow.lib.ArrowIndexError: Index 0 out of bounds
 ```
 </details>
 
+The `out/` dir will look like:
+```bash
+tree -L 1 out
+# out
+# ├── test000.soma
+# ├── test001.soma
+# ├── test002.soma
+# └── test003.soma
+```
+
+The last entry will be the one that failed, and the others will have succeeded. [`ok.soma`] and [`nok.soma`] were copied from such a run:
+
+```bash
+cp -r `ls out | tail -1` nok.soma
+cp -r `ls out | tail -2 | head -1` ok.soma
+```
+
+[Here's a GitHub Actions example][GHA write fail].
+
 ## Help
 ```bash
 ./test-categoricals.py --help
@@ -168,3 +187,6 @@ pyarrow.lib.ArrowIndexError: Index 0 out of bounds
 [`arm64`]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8102760527/job/22145939851#step:2:5
 [GHA nok]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8114003712/job/22178645697#step:9:1
 [GHA ok]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8114003712/job/22178645697#step:8:1
+[GHA write fail]: https://github.com/ryan-williams/tiledbsoma-flaky-test-repro/actions/runs/8114425951/job/22180026437#step:8:385
+[`ok.soma`]: ./ok.soma
+[`nok.soma`]: ./nok.soma

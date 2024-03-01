@@ -163,7 +163,7 @@ def call(fn, kwargs0, **kwargs1):
 
 @cli.command("both")
 @opts(write_opts)
-@option('-n', '--num', type=int, default=200, help="Number of iterations to run")
+@option('-n', '--num', type=int, default=500, help="Number of iterations to run")
 @option('-O', '--no-overwrite', is_flag=True, help="Don't remove+overwrite existing out-dir")
 @option('-X', '--no-short-circuit', is_flag=True, help="Run all -n/--num iterations, even if failures are encountered (default: short-circuit on first error)")
 @argument('out-dir', required=False)
