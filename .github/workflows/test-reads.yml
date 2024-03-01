@@ -1,0 +1,34 @@
+name: Test reading example SOMA DataFrames
+on:
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: 'Python version'
+        required: true
+        default: '3.11.8'
+      runs-on:
+        description: 'JSON array of `runs-on` values'
+        required: true
+        default: '[ "ubuntu-latest", "macos-latest" ]'
+jobs:
+  test:
+    name: "${{ matrix.runs-on }}: test reading example SOMA DataFrames"
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: ${{ fromJson(inputs.runs-on) }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - run: uname -m
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - run: pip freeze
+      - run: pip list
+      - name: Read ok.soma
+        run: python test-categoricals.py read ok.soma
+      - name: Read nok.soma
+        run: python test-categoricals.py read nok.soma

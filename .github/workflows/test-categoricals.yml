@@ -1,4 +1,4 @@
-name: test-categoricals.py
+name: Test reading and writing SOMA DataFrames with categorical columns
 on:
   workflow_dispatch:
     inputs:
@@ -26,7 +26,7 @@ on:
         default: '-bB'
 jobs:
   test:
-    name: Check flaky tiledbsoma test
+    name: Test reading and writing SOMA DataFrames with categorical columns
     runs-on: ${{ inputs.runs-on }}
     steps:
       - run: uname -m
@@ -39,4 +39,4 @@ jobs:
         run: pip install -r requirements.txt
       - run: pip freeze
       - run: pip list
-      - run: python test-categoricals.py -n ${{ inputs.n }} ${{ inputs.flags }}
+      - run: python test-categoricals.py both -n ${{ inputs.n }} ${{ inputs.flags }}
