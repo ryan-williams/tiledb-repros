@@ -20,6 +20,7 @@ def err(msg=''):
 
 @group
 def cli():
+    """Repeatedly write and/or read SOMA DataFrames with configurable categorical columns, to reproduce ArrowIndexErrors."""
     pass
 
 
@@ -110,8 +111,9 @@ def write(
             }
         )
         tbl = pa.Table.from_pandas(df)
-        err(f"Writing pyarrow Table {tbl}")
         sdf.write(tbl)
+        err(f"Wrote pyarrow Table {tbl}")
+        err()
 
 
 @cli.command("read")
@@ -125,9 +127,7 @@ def read(path):
             err(f"Read pyarrow table + called to_pandas():")
             err(f"{pa1}")
             err()
-        except ArrowIndexError as e:
-            err()
-            err("*** Caught ArrowIndexError ***")
+        except ArrowIndexError:
             err(f"Failed to convert pyarrow Table to_pandas():")
             err(f"{pa1}")
             err()
@@ -166,7 +166,7 @@ def call(fn, kwargs0, **kwargs1):
 @option('-n', '--num', type=int, default=200, help="Number of iterations to run")
 @option('-O', '--no-overwrite', is_flag=True, help="Don't remove+overwrite existing out-dir")
 @option('-X', '--no-short-circuit', is_flag=True, help="Run all -n/--num iterations, even if failures are encountered (default: short-circuit on first error)")
-@argument('out-dir')
+@argument('out-dir', required=False)
 def both(num, no_overwrite, no_short_circuit, out_dir, **kwargs):
     """Repeatedly round-trip write+read SOMA DataFrames, to test for ArrowIndexErrors.
 
@@ -183,13 +183,8 @@ def both(num, no_overwrite, no_short_circuit, out_dir, **kwargs):
             call(write, kwargs, path=out_path)
             try:
                 call(read, kwargs, path=out_path)
-                stdout.write('-')
-                stdout.flush()
             except ArrowIndexError as e:
-                if no_short_circuit:
-                    stdout.write('F')
-                    stdout.flush()
-                else:
+                if not no_short_circuit:
                     stderr.write(f"\nError on attempt {i+1}: {e}\n")
                     raise
 
