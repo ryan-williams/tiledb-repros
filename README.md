@@ -100,6 +100,87 @@ bool-unordered: [  -- dictionary:
 [true,false]  -- indices:
 [0,1,0,1]]
 
+Read pyarrow table + called to_pandas():
+pyarrow.Table
+soma_joinid: int64
+bool-ordered: dictionary<values=bool, indices=int8, ordered=1>
+bool-unordered: dictionary<values=bool, indices=int8, ordered=0>
+----
+soma_joinid: [[0,1,2,3]]
+bool-ordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+bool-unordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+
+Wrote pyarrow Table pyarrow.Table
+soma_joinid: int64
+bool-ordered: dictionary<values=bool, indices=int8, ordered=1>
+bool-unordered: dictionary<values=bool, indices=int8, ordered=0>
+----
+soma_joinid: [[0,1,2,3]]
+bool-ordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+bool-unordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+
+Read pyarrow table + called to_pandas():
+pyarrow.Table
+soma_joinid: int64
+bool-ordered: dictionary<values=bool, indices=int8, ordered=1>
+bool-unordered: dictionary<values=bool, indices=int8, ordered=0>
+----
+soma_joinid: [[0,1,2,3]]
+bool-ordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+bool-unordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+
+Wrote pyarrow Table pyarrow.Table
+soma_joinid: int64
+bool-ordered: dictionary<values=bool, indices=int8, ordered=1>
+bool-unordered: dictionary<values=bool, indices=int8, ordered=0>
+----
+soma_joinid: [[0,1,2,3]]
+bool-ordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+bool-unordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+
+Read pyarrow table + called to_pandas():
+pyarrow.Table
+soma_joinid: int64
+bool-ordered: dictionary<values=bool, indices=int8, ordered=1>
+bool-unordered: dictionary<values=bool, indices=int8, ordered=0>
+----
+soma_joinid: [[0,1,2,3]]
+bool-ordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+bool-unordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+
+Wrote pyarrow Table pyarrow.Table
+soma_joinid: int64
+bool-ordered: dictionary<values=bool, indices=int8, ordered=1>
+bool-unordered: dictionary<values=bool, indices=int8, ordered=0>
+----
+soma_joinid: [[0,1,2,3]]
+bool-ordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+bool-unordered: [  -- dictionary:
+[true,false]  -- indices:
+[0,1,0,1]]
+
 Failed to convert pyarrow Table to_pandas():
 pyarrow.Table
 soma_joinid: int64
