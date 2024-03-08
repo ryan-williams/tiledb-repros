@@ -1,6 +1,9 @@
 # flaky tiledbsoma test repro
 ARM Macs write invalid SOMA archives ≈10% of the time, iff at least 2 `pa.dictionary` columns are included.
 
+- This issue is believed to be fixed, as of [TileDB-SOMA#2194](https://github.com/single-cell-data/TileDB-SOMA/pull/2194).
+- TileDB-SOMA was unnecessarily evolving a schema for each column, which could potentially result in multiple evolutions at the same millisecond, which is known to cause issues.
+
 ## Repro
 
 ### Clone + install
