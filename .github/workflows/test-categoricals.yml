@@ -29,7 +29,7 @@ on:
         default: ''
 jobs:
   test:
-    name: Test reading and writing SOMA DataFrames with categorical columns
+    name: "${{ inputs.tiledb-soma-ref || '' }} Test reading and writing SOMA DataFrames with categorical columns"
     runs-on: ${{ inputs.runs-on }}
     steps:
       - run: uname -m
@@ -41,7 +41,7 @@ jobs:
       - name: Install deps
         if: ${{ inputs.tiledb-soma-ref == '' }}
         run: pip install -r requirements.txt
-      - name: Clone and install TileDB-SOMA
+      - name: Clone and install TileDB-SOMA${{ inputs.tiledb-soma-ref && format(' ({0})', inputs.tiledb-soma-ref) || '' }}
         if: ${{ inputs.tiledb-soma-ref != '' }}
         run: git clone --branch ${{ inputs.tiledb-soma-ref }} --depth 1 https://github.com/single-cell-data/TileDB-SOMA
       - working-directory: TileDB-SOMA
