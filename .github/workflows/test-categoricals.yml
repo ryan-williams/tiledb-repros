@@ -43,11 +43,12 @@ jobs:
         run: pip install -r requirements.txt
       - name: Clone and install TileDB-SOMA
         if: ${{ inputs.tiledb-soma-ref != '' }}
-        run: |
-          git clone --branch ${{ inputs.tiledb-soma-ref }} --depth 1 https://github.com/single-cell-data/TileDB-SOMA
-          cd TileDB-SOMA/apis/python
-          echo "1.7.3rc0" > RELEASE-VERSION
-          pip install -e . click
+        run: git clone --branch ${{ inputs.tiledb-soma-ref }} --depth 1 https://github.com/single-cell-data/TileDB-SOMA
+      - working-directory: TileDB-SOMA
+        run: git log -1
+      - run: pip install -e TileDB-SOMA/apis/python click
       - run: pip freeze
       - run: pip list
+      - working-directory: TileDB-SOMA
+        run: python scripts/show-versions.py
       - run: python test-categoricals.py both -n ${{ inputs.n }} ${{ inputs.flags }}
