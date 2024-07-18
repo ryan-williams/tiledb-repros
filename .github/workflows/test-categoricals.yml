@@ -27,6 +27,9 @@ on:
       tiledb-soma-ref:
         description: 'TileDB-SOMA branch or tag to check; when unset, uses the latest release from PyPI'
         default: ''
+      deps:
+        description: 'Additional pip dependencies to install'
+        default: ''
 jobs:
   test:
     name: "${{ inputs.tiledb-soma-ref || '' }} Test reading and writing SOMA DataFrames with categorical columns"
@@ -46,7 +49,7 @@ jobs:
         run: git clone --branch ${{ inputs.tiledb-soma-ref }} --depth 1 https://github.com/single-cell-data/TileDB-SOMA
       - working-directory: TileDB-SOMA
         run: git log -1
-      - run: pip install -e TileDB-SOMA/apis/python click
+      - run: pip install -e TileDB-SOMA/apis/python click ${{ inputs.deps }}
       - run: pip freeze
       - run: pip list
       - working-directory: TileDB-SOMA
