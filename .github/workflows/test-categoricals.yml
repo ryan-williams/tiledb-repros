@@ -50,5 +50,7 @@ jobs:
       - run: pip freeze
       - run: pip list
       - working-directory: TileDB-SOMA
+        env:
+          TILEDB_CORE_MISMATCHED_VERSIONS_ERROR_LEVEL: err
         run: python scripts/show-versions.py
       - run: python test-categoricals.py both -n ${{ inputs.n }} ${{ inputs.flags }}
